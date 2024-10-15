@@ -1,0 +1,3 @@
+C:\Users\Tadios\source\repos\ElderWood\x64\Debug\raylib.dll
+C:\Users\Tadios\source\repos\ElderWood\x64\Debug\glfw3.dll
+C:\Users\Tadios\source\repos\ElderWood\ElderWood\x64\Debug\ElderWood.vcxproj.Up2Date
