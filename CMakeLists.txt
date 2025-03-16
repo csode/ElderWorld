@@ -1,13 +1,25 @@
 cmake_minimum_required(VERSION 3.10)
-project(CppFileGenerator VERSION 1.0)
+project(elderworld VERSION 0.1.0)
+
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Choose the type of build: Debug or Release." FORCE)
+endif()
+
+set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release")
+
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    message(STATUS "Building in Debug mode")
+    add_compile_options(-g -O0)  # Debug flags
+elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
+    message(STATUS "Building in Release mode")
+    add_compile_options(-O3)  # Release flags
+endif()
 
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED True)
 
-# Ensure the compile_commands.json file is generated
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# Set output directory within the build directory
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 if (WIN32)
@@ -16,7 +28,7 @@ if (WIN32)
         set(CMAKE_GENERATOR_PLATFORM x64)
     else()
         find_program(GCC_BIN g++)
-        find_program(CLANG_BIN clang)
+        find_program(CLANG_BIN clang++++)
         if (GCC_BIN)
             set(CMAKE_C_COMPILER ${GCC_BIN})
         elseif (CLANG_BIN)
@@ -29,27 +41,26 @@ elseif (APPLE)
     set(CMAKE_C_COMPILER clang++)
 elseif (UNIX)
     find_program(GCC_BIN g++)
-    find_program(CLANG_BIN clang)
+    find_program(CLANG_BIN clang++)
     if (GCC_BIN)
         set(CMAKE_C_COMPILER ${GCC_BIN})
     elseif (CLANG_BIN)
         set(CMAKE_C_COMPILER ${CLANG_BIN})
     else()
-        message(FATAL_ERROR "Neither G++ nor Clang found! Please install a compiler.")
+        message(FATAL_ERROR "Neither GCC nor Clang found! Please install a compiler.")
     endif()
 endif()
 
-# Locate source files
 file(GLOB SOURCES "src/*.cpp")
+find_package(raylib REQUIRED)
 
-# Add executable target with source files
-add_executable(app ${SOURCES})
-
-# Link header file directory
-target_include_directories(app PRIVATE header)
+add_executable(elderworld ${SOURCES})
+add_compile_definitions(ASSET_PATH="${CMAKE_SOURCE_DIR}/assets/")
+target_include_directories(elderworld PRIVATE header raylib)
+target_link_libraries(elderworld PRIVATE raylib )
 
 if (MSVC)
-    target_compile_options(app PRIVATE /W4 /permissive-)
+    target_compile_options(elderworld PRIVATE /W4 /permissive-)
 else()
-    target_compile_options(app PRIVATE -Wall -Wextra -Wpedantic)
+    target_compile_options(elderworld PRIVATE -Wall -Wextra -Wpedantic)
 endif()

@@ -1,10 +1,10 @@
-#ifndef WIN_H
-#define WIN_H
+#pragma once
+#include "raylib.h"
+class Win {
+public:
+  Win();
+  ~Win();
 
-#include <iostream>
-
-void displayMessage() {
-    std::cout << "Hello, World from elderworld!" << std::endl;
-}
-
-#endif // WIN_H
+private:
+  Sound intro_sound;
+};
